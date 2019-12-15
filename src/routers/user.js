@@ -120,4 +120,20 @@ router.delete('/users/me', auth, async (req,res) =>{
     }
 })
 
+router.delete('/users/me', auth, async (req,res) =>{
+    try{
+        // //you can find out which user it is here because of the auth function identifying the user by the token
+        // const deletedUser = await User.findByIdAndDelete(req.user._id)
+        // if(!deletedUser){
+        //     return res.status(404).send()
+        // }
+        sendCancellationEmail(req.user.email, req.user.name)
+        await req.user.remove()
+        res.send(req.user)
+    }
+    catch(e){
+        res.status(500).send(e)
+    }
+})
+
 module.exports = router
